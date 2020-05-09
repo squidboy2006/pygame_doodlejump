@@ -44,10 +44,11 @@ class Game:
                 self.player.vel.y = 0
                 self.player.rect.midbottom = self.player.pos
         #if player reaches the top 1/4 of the screen
-        if self.player.rect.top <= HEIGHT / 2.5:
-            self.player.rect.y += abs(self.player.vel.y)
+        print (self.player.rect.top <= HEIGHT / 4.5)
+        if self.player.rect.top <= HEIGHT / 4.5:
+            self.player.rect.y += 18.5
             for plat in self.platforms:
-                plat.rect.y += abs(self.player.vel.y)
+                plat.rect.y += WINDOW_SCROLL
                 if plat.rect.top >= HEIGHT:
                     plat.kill()
         #spawn new platforms

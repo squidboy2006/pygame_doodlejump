@@ -21,7 +21,7 @@ class Player(pg.sprite.Sprite):
         collision = pg.sprite.spritecollide(self, self.game.platforms, False)
         self.rect.y -= 1
         if collision:
-            self.vel.y = -19
+            self.vel.y = PLAYER_JUMP
 
     def update(self):
         self.acc = vec(0, PLAYER_GRAV)
