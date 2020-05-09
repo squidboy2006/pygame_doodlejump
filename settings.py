@@ -4,6 +4,7 @@ TITLE = "Jumpy"
 WIDTH = 480
 HEIGHT = 600
 FPS = 60
+FONT_NAME = 'arial'
 
 #platforms
 PLATFORM_LIST = [(0, HEIGHT - 40, WIDTH, 40), (WIDTH / 2 - 50, HEIGHT * 3 / 4, 100, 20),
@@ -23,3 +24,7 @@ RED = (255, 0, 0)
 GREEN = (0,255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
+PURPLE = (255, 0, 255)
+CYAN = (0, 255, 255)
+LIGHT_BLUE = (0, 155, 155)
+BGCOLOR = LIGHT_BLUE
