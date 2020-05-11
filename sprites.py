@@ -2,14 +2,25 @@
 import pygame as pg
 from settings import *
 vec = pg.math.Vector2
+class Spritesheet:
+    #class for loading and parsing spritesheets
+    def __init__(self, filename):
+        self.spritesheet = pg.image.load(filename).convert()
+    
+    def get_image(self, x, y, width, height):
+        #grab an image from the spritesheet
+        image = pg.Surface((width, height))
+        image.blit(self.spritesheet, (0, 0), (x, y, width, height))
+        image = pg.transform.scale(image, (width // 2, height // 2))
+        return image
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game):
         self.game = game
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((30, 40))
-        self.image.fill(YELLOW)
+        self.image = self.game.spritesheet.get_image(614, 1063, 120, 191)
         self.rect = self.image.get_rect()
+        self.image.set_colorkey(BLACK)
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
         self.pos = vec(WIDTH / 2, 500)
         self.vel = vec(0, 0)
