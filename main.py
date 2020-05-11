@@ -19,7 +19,7 @@ class Game:
     def load_data(self):
         #load high score
         self.dir = path.dirname(__file__)
-        with open(path.join(self.dir, HS_FILE), 'wb') as f:
+        with open(path.join(self.dir, HS_FILE), 'r') as f:
             try:
                 self.highscore = int(f.read())
             except:
@@ -123,7 +123,7 @@ class Game:
             self.highscore = self.score
             self.draw_text("NEW HIGH SCORE!", 48, WHITE, WIDTH / 2, HEIGHT / 2 + 66)
             with open(path.join(self.dir, HS_FILE), 'w') as f:
-                f.write(str(self.score))
+                f.write(str(self.highscore))
         else:  
             self.draw_text("high score: " + str(self.highscore), 22, WHITE, WIDTH / 2, HEIGHT / 2 + 40)
         pg.display.flip()
