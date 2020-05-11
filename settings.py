@@ -5,6 +5,7 @@ WIDTH = 480
 HEIGHT = 600
 FPS = 60
 FONT_NAME = 'arial'
+HS_FILE = "Highscore.txt"
 
 #platforms
 PLATFORM_LIST = [(0, HEIGHT - 40, WIDTH, 40), (WIDTH / 2 - 50, HEIGHT * 3 / 4, 100, 20),
