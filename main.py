@@ -62,7 +62,7 @@ class Game:
                 self.player.rect.midbottom = self.player.pos
 
         #if player reaches the top 1/4 of the screen
-        if self.player.rect.top <= HEIGHT / 3:
+        if self.player.rect.top <= HEIGHT / 4:
             self.player.acc.y += 28.5
             for plat in self.platforms:
                 plat.rect.y += 10
