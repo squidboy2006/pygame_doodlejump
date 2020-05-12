@@ -63,9 +63,9 @@ class Game:
 
         #if player reaches the top 1/4 of the screen
         if self.player.rect.top <= HEIGHT / 3:
-            self.player.rect.y += 18.5
+            self.player.acc.y += 28.5
             for plat in self.platforms:
-                plat.rect.y += WINDOW_SCROLL
+                plat.rect.y += 10
                 if plat.rect.top >= HEIGHT:
                     plat.kill()
                     self.score += 10
