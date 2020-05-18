@@ -3,8 +3,8 @@ import random
 from settings import *
 from sprites import *
 from os import path
-
-class Game:
+ 
+class Game: 
     def __init__(self):
         #initialize game window, ect
         pg.init()
@@ -36,7 +36,7 @@ class Game:
         self.player = Player(self)
         self.all_sprites.add(self.player)
         for plat in PLATFORM_LIST:
-            p = Platform(*plat)
+            p = Platform(self, *plat)
             self.all_sprites.add(p)
             self.platforms.add(p)
 
@@ -63,7 +63,7 @@ class Game:
 
         #if player reaches the top 1/4 of the screen
         if self.player.rect.top <= HEIGHT / 4:
-            self.player.acc.y += 28.5
+            self.player.acc.y += 27
             for plat in self.platforms:
                 plat.rect.y += 10
                 if plat.rect.top >= HEIGHT:
@@ -82,7 +82,7 @@ class Game:
         #spawn new platforms
         while len(self.platforms) < 6:
             width = random.randrange(50, 100)
-            p = Platform(random.randrange(0, WIDTH - width), random.randrange(-50, -25), width, 20)
+            p = Platform(self, random.randrange(0, WIDTH - width), random.randrange(-50, -25))
             self.platforms.add(p)
             self.all_sprites.add(p)
 
@@ -101,6 +101,7 @@ class Game:
         #game loop - draw
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
+        self.screen.blit(self.player.image, self.player.rect)
         self.draw_text(str(self.score), 25, WHITE, WIDTH / 2, 5)
         pg.display.flip()
 
