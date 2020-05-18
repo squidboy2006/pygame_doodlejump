@@ -57,8 +57,15 @@ class Player(pg.sprite.Sprite):
         self.rect.y += 1
         collision = pg.sprite.spritecollide(self, self.game.platforms, False)
         self.rect.y -= 1
-        if collision:
+        if collision and not self.jumping:
+            self.jumping = True
             self.vel.y = PLAYER_JUMP
+
+    def jump_cut(self):
+        #stop jumping if key is released
+        if self.jumping:
+            if self.vel.y < -3:
+                self.vel.y = -3
 
     def update(self):
         self.animate()

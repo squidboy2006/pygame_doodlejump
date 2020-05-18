@@ -50,20 +50,27 @@ class Game:
             self.draw()
 
     def update(self):
-        #game loop - update
+        #game loop - update 
         self.all_sprites.update()
 
         #check if player is on a platform only if falling
         if self.player.vel.y > 0:
             collisions = pg.sprite.spritecollide(self.player, self.platforms, False)
             if collisions:
-                self.player.pos.y = collisions[0].rect.top
-                self.player.vel.y = 0
-                self.player.rect.midbottom = self.player.pos
+                self.player.jumping = False
+                lowest = collisions[0]
+                for hit in collisions:
+                    if hit.rect.bottom > lowest.rect.centery:
+                        lowest = hit
+                if self.player.pos.y < lowest.rect.bottom:
+                    self.player.pos.y = lowest.rect.top
+                    self.player.vel.y = 0
+                    #self.jumping = False
+                    self.player.rect.midbottom = self.player.pos
 
         #if player reaches the top 1/4 of the screen
         if self.player.rect.top <= HEIGHT / 4:
-            self.player.acc.y += 27
+            self.player.acc.y += 36
             for plat in self.platforms:
                 plat.rect.y += 10
                 if plat.rect.top >= HEIGHT:
@@ -96,6 +103,9 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.player.jump()
+            if event.type == pg.KEYUP:
+                if event.key == pg.K_SPACE:
+                    self.player.jump_cut()
 
     def draw(self):
         #game loop - draw
