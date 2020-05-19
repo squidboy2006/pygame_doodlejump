@@ -1,5 +1,4 @@
 #art from kenney.ln
-#
 
 import pygame as pg
 import random
@@ -18,7 +17,7 @@ class Game:
         self.running = True
         self.font_name = pg.font.match_font(FONT_NAME)
         self.load_data()
-
+  
     def load_data(self):
         #load high score
         self.dir = path.dirname(__file__)
@@ -33,18 +32,17 @@ class Game:
         #load sounds
         self.snd_dir = path.join(self.dir, 'snd')
         self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'Jump.wav'))
+        self.jetpack_sound = pg.mixer.Sound(path.join(self.snd_dir, 'jetpack_powerup.wav'))
 
     def new(self):
         #starts a new game
         self.score = 0
         self.all_sprites = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
+        self.powerups = pg.sprite.Group()
         self.player = Player(self)
-        self.all_sprites.add(self.player)
         for plat in PLATFORM_LIST:
-            p = Platform(self, *plat)
-            self.all_sprites.add(p)
-            self.platforms.add(p)
+            Platform(self, *plat)
         #this is what would be here if i had music
         #pg.mixer.music.load(path.join(self.snd, 'music_name.ogg'))
 
@@ -73,21 +71,30 @@ class Game:
                 for hit in collisions:
                     if hit.rect.bottom > lowest.rect.centery:
                         lowest = hit
-                if self.player.pos.y < lowest.rect.bottom:
-                    self.player.pos.y = lowest.rect.top
-                    self.player.vel.y = 0
-                    #self.jumping = False
-                    self.player.rect.midbottom = self.player.pos
+                
+                if self.player.pos.x < lowest.rect.right + 6 and \
+                   self.player.pos.x > lowest.rect.left - 6:
+                    if self.player.pos.y < lowest.rect.bottom:
+                        self.player.pos.y = lowest.rect.top
+                        self.player.vel.y = 0
+                        self.player.rect.midbottom = self.player.pos
 
         #if player reaches the top 1/4 of the screen
         if self.player.rect.top <= HEIGHT / 4:
-            self.player.acc.y += 36
+            self.player.pos.y += max(abs(self.player.vel.y), 2)
             for plat in self.platforms:
-                plat.rect.y += 10
+                plat.rect.top += max(abs(self.player.vel.y), 2)
                 if plat.rect.top >= HEIGHT:
                     plat.kill()
                     self.score += 10
-
+        #if player hits a powerup
+        pow_collisions = pg.sprite.spritecollide(self.player, self.powerups, True)
+        for p in pow_collisions:
+            if p.type == 'boost':
+                self.player.vel.y = -BOOST_POWER
+                self.player.jumping = False
+                self.jetpack_sound.play()
+        
         # die when falls off the screen
         if self.player.rect.bottom >= HEIGHT:
             for sprite in self.all_sprites:
@@ -100,9 +107,7 @@ class Game:
         #spawn new platforms
         while len(self.platforms) < 6:
             width = random.randrange(50, 100)
-            p = Platform(self, random.randrange(0, WIDTH - width), random.randrange(-50, -25))
-            self.platforms.add(p)
-            self.all_sprites.add(p)
+            Platform(self, random.randrange(0, WIDTH - width), random.randrange(-50, -25))
 
     def events(self):
         #game loop - events
