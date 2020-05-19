@@ -1,3 +1,6 @@
+#art from kenney.ln
+#
+
 import pygame as pg
 import random
 from settings import *
@@ -27,6 +30,9 @@ class Game:
                 self.highscore = 0
         #load spritesheet images
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
+        #load sounds
+        self.snd_dir = path.join(self.dir, 'snd')
+        self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'Jump.wav'))
 
     def new(self):
         #starts a new game
@@ -39,15 +45,20 @@ class Game:
             p = Platform(self, *plat)
             self.all_sprites.add(p)
             self.platforms.add(p)
+        #this is what would be here if i had music
+        #pg.mixer.music.load(path.join(self.snd, 'music_name.ogg'))
 
     def run(self):
         #game loop
+        #this is what would be here if i had music
+        #pg.mixer.music.play(loops=-1)
         self.playing = True
         while self.playing == True:
             self.clock.tick(FPS)
             self.events()
             self.update()
             self.draw()
+        #pg.mixer.music.fadeout(1000)
 
     def update(self):
         #game loop - update 
@@ -117,6 +128,9 @@ class Game:
 
     def show_start_screen(self):
         #game start screen
+        #this is what would be here if i had music
+        #pg.mixer.music.load(path.join(self.snd, 'music_name.ogg'))
+        #pg.mixer.music.play(loops=-1)
         self.screen.fill(BGCOLOR)
         self.draw_text(TITLE, 48, WHITE, WIDTH / 2, HEIGHT / 4)
         self.draw_text("Arrows to move, Space to jump", 22, WHITE, WIDTH / 2 , HEIGHT / 2)
@@ -124,9 +138,14 @@ class Game:
         self.draw_text("high score: " + str(self.highscore), 22, WHITE, WIDTH / 2, 15)
         pg.display.flip()
         self.wait_for_key()
+        #pg.mixer.music.fadeout(1000)
 
     def show_go_screen(self):
         #game over/continue
+        #this is what would be here if i had music
+        #pg.mixer.music.load(path.join(self.snd, 'music_name.ogg'))
+        #pg.mixer.music.play(loops=-1)
+        self.screen.fill(BGCOLOR)
         if not self.running:
             return
         self.screen.fill(BGCOLOR)
@@ -142,6 +161,7 @@ class Game:
             self.draw_text("high score: " + str(self.highscore), 22, WHITE, WIDTH / 2, HEIGHT / 2 + 40)
         pg.display.flip()
         self.wait_for_key()
+         #pg.mixer.music.fadeout(1000)
 
     def wait_for_key(self):
         waiting = True

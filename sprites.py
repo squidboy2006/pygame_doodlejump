@@ -60,6 +60,7 @@ class Player(pg.sprite.Sprite):
         if collision and not self.jumping:
             self.jumping = True
             self.vel.y = PLAYER_JUMP
+            self.game.jump_sound.play()
 
     def jump_cut(self):
         #stop jumping if key is released
