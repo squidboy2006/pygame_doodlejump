@@ -37,12 +37,14 @@ class Game:
     def new(self):
         #starts a new game
         self.score = 0
-        self.all_sprites = pg.sprite.Group()
+        self.all_sprites = pg.sprite.LayeredUpdates()
         self.platforms = pg.sprite.Group()
         self.powerups = pg.sprite.Group()
+        self.mobs = pg.sprite.Group()
         self.player = Player(self)
         for plat in PLATFORM_LIST:
             Platform(self, *plat)
+        self.mob_timer = 0
         #this is what would be here if i had music
         #pg.mixer.music.load(path.join(self.snd, 'music_name.ogg'))
 
@@ -61,6 +63,17 @@ class Game:
     def update(self):
         #game loop - update 
         self.all_sprites.update()
+
+        #spawn mobs
+        now = pg.time.get_ticks()
+        if now - self.mob_timer > MOB_FREQ + random.choice([-1000,-500, 0, -500, -1000, -1500, -2000]):
+            self.mob_timer = now
+            Mob(self)
+        
+        #check for collisions between the player and the mobs
+        mob_collisions = pg.sprite.spritecollide(self.player, self.mobs, False) 
+        if mob_collisions:
+            self.playing = False
 
         #check if player is on a platform only if falling
         if self.player.vel.y > 0:
@@ -82,11 +95,18 @@ class Game:
         #if player reaches the top 1/4 of the screen
         if self.player.rect.top <= HEIGHT / 4:
             self.player.pos.y += max(abs(self.player.vel.y), 2)
+        
+            for mob in self.mobs:
+                mob.rect.top += max(abs(self.player.vel.y), 2)
+                if mob.rect.top >= HEIGHT:
+                    mob.kill()
+            
             for plat in self.platforms:
                 plat.rect.top += max(abs(self.player.vel.y), 2)
                 if plat.rect.top >= HEIGHT:
                     plat.kill()
                     self.score += 10
+        
         #if player hits a powerup
         pow_collisions = pg.sprite.spritecollide(self.player, self.powerups, True)
         for p in pow_collisions:
@@ -127,7 +147,6 @@ class Game:
         #game loop - draw
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
-        self.screen.blit(self.player.image, self.player.rect)
         self.draw_text(str(self.score), 25, WHITE, WIDTH / 2, 5)
         pg.display.flip()
 
