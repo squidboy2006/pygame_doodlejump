@@ -71,7 +71,7 @@ class Game:
             Mob(self)
         
         #check for collisions between the player and the mobs
-        mob_collisions = pg.sprite.spritecollide(self.player, self.mobs, False) 
+        mob_collisions = pg.sprite.spritecollide(self.player, self.mobs, False, pg.sprite.collide_mask) 
         if mob_collisions:
             self.playing = False
 
