@@ -5,7 +5,7 @@ import random
 from settings import *
 from sprites import *
 from os import path
- 
+  
 class Game: 
     def __init__(self):
         #initialize game window, ect
@@ -29,6 +29,12 @@ class Game:
                 self.highscore = 0
         #load spritesheet images
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
+
+        #load clouds
+        self.cloud_images = []
+        for i in range(1, 4):
+            self.cloud_images.append(pg.image.load(path.join(img_dir, 'cloud{}.png'.format(i))).convert())
+
         #load sounds
         self.snd_dir = path.join(self.dir, 'snd')
         self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'Jump.wav'))
@@ -41,10 +47,14 @@ class Game:
         self.platforms = pg.sprite.Group()
         self.powerups = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
+        self.clouds = pg.sprite.Group()
         self.player = Player(self)
         for plat in PLATFORM_LIST:
             Platform(self, *plat)
         self.mob_timer = 0
+        for i in range(6):
+            c = Cloud(self)
+            c.rect.y += 500
         #this is what would be here if i had music
         #pg.mixer.music.load(path.join(self.snd, 'music_name.ogg'))
 
@@ -94,6 +104,9 @@ class Game:
 
         #if player reaches the top 1/4 of the screen
         if self.player.rect.top <= HEIGHT / 4:
+            if random.randrange(100) < 6:
+                Cloud(self)
+
             self.player.pos.y += max(abs(self.player.vel.y), 2)
         
             for mob in self.mobs:
@@ -106,6 +119,9 @@ class Game:
                 if plat.rect.top >= HEIGHT:
                     plat.kill()
                     self.score += 10
+
+            for cloud in self.clouds:
+                cloud.rect.top += max(abs(self.player.vel.y / 2), 2)
         
         #if player hits a powerup
         pow_collisions = pg.sprite.spritecollide(self.player, self.powerups, True)
