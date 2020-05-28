@@ -98,7 +98,7 @@ class Player(pg.sprite.Sprite):
 
     def animate(self):
         now = pg.time.get_ticks()
-        if self.vel.x != 0:
+        if self.vel.x != 0 and self.vel.y == 0:
             self.walking = True
         else:
             self.walking = False
@@ -111,6 +111,13 @@ class Player(pg.sprite.Sprite):
                 self.image = self.standing_frames[self.current_frame]
                 self.rect = self.image.get_rect()
                 self.rect.bottom = bottom
+        
+        #jumping animation
+        if self.jumping:
+            bottom = self.rect.bottom
+            self.image = self.jump_frame
+            self.rect = self.image.get_rect()
+            self.rect.bottom = bottom
         
         #walking animation
         if self.walking:

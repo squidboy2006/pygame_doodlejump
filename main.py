@@ -86,7 +86,7 @@ class Game:
             self.playing = False
 
         #check if player is on a platform only if falling
-        if self.player.vel.y > 0:
+        if self.player.vel.y >= 0:
             collisions = pg.sprite.spritecollide(self.player, self.platforms, False)
             if collisions:
                 self.player.jumping = False
@@ -128,7 +128,7 @@ class Game:
         for p in pow_collisions:
             if p.type == 'boost':
                 self.player.vel.y = -BOOST_POWER
-                self.player.jumping = False
+                self.player.jumping = True
                 self.jetpack_sound.play()
         
         # die when falls off the screen
@@ -174,7 +174,7 @@ class Game:
         self.screen.fill(BGCOLOR)
         self.draw_text(TITLE, 48, WHITE, WIDTH / 2, HEIGHT / 4)
         self.draw_text("Arrows to move, Space to jump", 22, WHITE, WIDTH / 2 , HEIGHT / 2)
-        self.draw_text("press a key to play", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
+        self.draw_text("press the s key to play", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
         self.draw_text("high score: " + str(self.highscore), 22, WHITE, WIDTH / 2, 15)
         pg.display.flip()
         self.wait_for_key()
@@ -191,7 +191,7 @@ class Game:
         self.screen.fill(BGCOLOR)
         self.draw_text("Game over", 48, WHITE, WIDTH / 2, HEIGHT / 4)
         self.draw_text("Score: " + str(self.score), 22, WHITE, WIDTH / 2 , HEIGHT / 2)
-        self.draw_text("press a key to play again", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
+        self.draw_text("press the s key to play again", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
         if self.score > self.highscore:
             self.highscore = self.score
             self.draw_text("NEW HIGH SCORE!", 48, WHITE, WIDTH / 2, HEIGHT / 2 + 66)
@@ -207,11 +207,12 @@ class Game:
         waiting = True
         while waiting:
             self.clock.tick(FPS)
+            keys = pg.key.get_pressed()
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     waiting = False
                     self.running = False
-                if event.type == pg.KEYUP:
+                if keys[pg.K_s]:
                     waiting = False
 
     def draw_text(self, text, size, color, x, y):
